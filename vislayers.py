@@ -66,6 +66,10 @@ class Foreground(Layer):
         for m in Game.monsters:
             if m.health>0:
                 pygame.draw.circle(self.sf,m.color,(Game.x_left_padding+m.posx,Game.y_top_padding+m.posy),m.size)
+                #draw health of monster
+                text = Game.font.render(str(m.health), True, (0,0,0))
+                Game.screen.blit(text,(Game.x_left_padding+m.posx,Game.y_top_padding+m.posy-3*m.size,30,30))
+
   
     def draw_towers(self):
         px,py=Game.x_left_padding,Game.y_top_padding
@@ -77,7 +81,7 @@ class Foreground(Layer):
                 #pygame.draw.line(self.sf,t.color,(pad+t.posx,pad+t.posy),(px+t.target.posx,py+t.target.posy))
                 pass
             elif t.state==Tower.State.FIRE:
-                pygame.draw.line(self.sf,(0,255,0),(pad+t.posx,pad+t.posy),(px+t.target.posx,py+t.target.posy),width=5)
+                pygame.draw.line(self.sf,(255,0,0),(pad+t.posx,pad+t.posy),(px+t.target.posx,py+t.target.posy),width=1)
             elif t.state==Tower.State.RELOAD:
                 pass
     def draw_text(self):

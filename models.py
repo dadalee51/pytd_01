@@ -34,7 +34,9 @@ class Tower:
         self.color=color
         self.size=size
         self.effect_range=effect_range
-        self.aim_delay=0.01
+        self.aim_delay=1
+        self.fire_delay=1
+        self.reload_delay=0.5
         #dynamic changes
         self.aim_direction=[0,0]
         self.reload_time=100
@@ -43,27 +45,36 @@ class Tower:
         self.state=Tower.State.IDLE
         self.reloading=0
     async def detect_monster(self): #IDLE to AIM
-        for m in Game.monsters:
-            mx=m.posx+Game.x_left_padding
-            my=m.posy+Game.y_top_padding
-            calc_range=math.sqrt((mx-self.posx)**2+(my-self.posy)**2)
-            #print(calc_range)
-            if calc_range<=self.effect_range:
-                self.target=m
-                self.aim_direction=self.tatan2(m.posx-self.posx, m.posy-self.posy)
-                self.state=Tower.State.AIM
-                await asyncio.sleep(self.aim_delay)
-                return
+        while True:
+            if not Game.state==GameState.STATE_PLAY: return
+            for m in Game.monsters:
+                mx=m.posx+Game.x_left_padding
+                my=m.posy+Game.y_top_padding
+                calc_range=math.sqrt((mx-self.posx)**2+(my-self.posy)**2)
+                #print(calc_range)
+                if calc_range<=self.effect_range:
+                    self.target=m
+                    self.aim_direction=self.tatan2(m.posx-self.posx, m.posy-self.posy)
+                    self.state=Tower.State.AIM
+                    await asyncio.sleep(self.aim_delay)
+            await asyncio.sleep(0.01)
         self.state=Tower.State.IDLE
     async def attack_monster(self): #AIM to FIRE
-        if self.state==Tower.State.AIM:
-            await asyncio.sleep(self.aim_delay)
-            self.target.health-=self.power
-            self.state=Tower.State.FIRE
+        while True:
+            if not Game.state==GameState.STATE_PLAY: return
+            if self.state==Tower.State.AIM:
+                await asyncio.sleep(self.fire_delay)
+                self.target.health-=self.power
+                self.state=Tower.State.FIRE
+            await asyncio.sleep(0.01)
+
     async def reload(self):
-        if self.state==Tower.State.FIRE:
-            await asyncio.sleep(self.aim_delay)
-            self.state=Tower.State.RELOAD
+        while True:
+            if not Game.state==GameState.STATE_PLAY: return
+            if self.state==Tower.State.FIRE:
+                await asyncio.sleep(self.reload_delay)
+                self.state=Tower.State.RELOAD
+            await asyncio.sleep(0.01)
 
 #a tower defence game may no have main player on screen.
 class Grid:

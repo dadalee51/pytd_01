@@ -4,6 +4,7 @@ import asyncio
 from game import Game, GameState, PlayerState, BuildState
 from models import Grid
 from pathfinder import AStar, Node
+from runners import MonsterRunner
 class Input:
     def __init__(self):
         print('control created')
@@ -15,6 +16,7 @@ class Input:
         mpos=pygame.mouse.get_pos()
         if Game.buttons['start'].collidepoint(mpos):
             Game.state=GameState.STATE_PLAY
+            MonsterRunner.regenerate_monsters()
         elif Game.buttons['stop'].collidepoint(mpos):
             Game.state=GameState.STATE_IDLE
         elif Game.buttons['save'].collidepoint(mpos):

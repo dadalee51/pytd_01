@@ -16,10 +16,17 @@ class TowerRunner:
         for j,row in enumerate(Grid.grid):
             for i,cell in enumerate(row):
                 if cell >= 10 and cell <=1000:
+                    print('created tower:',i,j)
                     twr=Tower('tower'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,0,100),10,100)
                     Game.towers.append(twr)
+                     #go through all towers
+        for t in Game.towers:
+            Game.loop.create_task(t.detect_monster())
+            Game.loop.create_task(t.attack_monster())
+            Game.loop.create_task(t.reload())
         self.tower_created=1
     def update_towers(self):
+        #add towers to list and activate them
         pass
 
     async def run(self):
@@ -30,12 +37,6 @@ class TowerRunner:
                 self.tower_created=0  
             elif Game.state==GameState.STATE_PLAY:
                 self.create_towers()
-                #go through all towers
-                for t in Game.towers:
-                    await t.detect_monster()
-                    await t.attack_monster()
-                    await t.reload()
-                    
             await asyncio.sleep(0.01)
 
 
@@ -43,10 +44,13 @@ class TowerRunner:
 class MonsterRunner:
     def __init__(self):
         pass
+
+    @staticmethod
+    def regenerate_monsters():
+        m =Monster('aMon', 100,Grid.start_x*Grid.grid_size,Grid.start_y*Grid.grid_size, (50,0,50), 5, 1, 1)
+        Game.monsters.append(m)
     #produce and track monsters
     async def run(self):
-        m =Monster('aMon', 100,0,100, (50,0,50), 5, 1, 3)
-        Game.monsters.append(m)
         while True:
             if Game.state==GameState.STATE_IDLE:
                 for e in Game.monsters:
