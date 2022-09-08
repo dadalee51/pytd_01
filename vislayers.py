@@ -32,7 +32,7 @@ class Background(Layer):
                     #tower
                     ncolr=(255,255,0)
                 elif Grid.astar.data[j][i]:
-                    ncolr=(255,255,255)
+                    ncolr=(100,100,100)
                     if Grid.astar.data[j][i].name==Grid.astar.start:
                         Grid.start_x=i
                         Grid.start_y=j
@@ -46,10 +46,11 @@ class Background(Layer):
                                                Game.y_top_padding+j*Grid.grid_size,\
                                                Grid.grid_size-Grid.grid_border_size,\
                                                Grid.grid_size-Grid.grid_border_size))
-        self.create_button('start','StartWave',(50,255,0),0,30)
-        self.create_button('stop','StopWave',(150,10,10),140,30)
-        self.create_button('save','SaveMap',(50,10,200),320,30)
-        self.create_button('load','LoadMap',(200,200,50),460,30)
+        btn_clr=(153, 230, 0)
+        self.create_button('start','StartWave',btn_clr,0,30)
+        self.create_button('stop','StopWave',btn_clr,140,30)
+        self.create_button('save','SaveMap',btn_clr,320,30)
+        self.create_button('load','LoadMap',btn_clr,460,30)
 
     #umbrella draw function
     def draw(self):
@@ -73,9 +74,10 @@ class Foreground(Layer):
   
     def draw_towers(self):
         px,py=Game.x_left_padding,Game.y_top_padding
+        pad=Grid.grid_size//2
+        off=t.size//2
         for t in Game.towers:
-            pad=Grid.grid_size//2-t.size//2
-            pygame.draw.rect(self.sf,t.color, (pad+t.posx, pad+t.posy,t.size,t.size))
+            pygame.draw.rect(self.sf,t.color, (t.posx+pad-off, t.posy+pad-off,t.size,t.size))
             #then process each tower's state:
             if t.state==Tower.State.AIM:
                 #pygame.draw.line(self.sf,t.color,(pad+t.posx,pad+t.posy),(px+t.target.posx,py+t.target.posy))

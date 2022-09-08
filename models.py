@@ -8,6 +8,20 @@ from pathfinder import AStar
 from file_utils import FileAction
 import math
 from enum import Enum,auto
+
+#a class that stores all deliveries, ballistics and energy beams, elements in 2d plane, 
+#once charges left the towers, they belong to the forces of nature.
+#named it packages because it may contain other things.
+class PackageList:
+    pk_list=[]
+    #update package delivery status, once they arrive, mark the designations
+
+class Package:
+    def __init__(self,px,py,direction):
+        self.px=px
+        self.py=py
+        self.dir=direction
+
 class Monster:
     def __init__(self,id,health,posx,posy,color,size, index, speed):
         self.id=id
@@ -18,6 +32,11 @@ class Monster:
         self.size=size
         self.index=index
         self.speed=speed
+
+    def ballistic_hit(self):
+        pass
+
+
 class Tower:
     class State(Enum): #state of tower is per object, cannot be global level. However it is still singleton.
         IDLE=auto()
@@ -63,9 +82,10 @@ class Tower:
         while True:
             if not Game.state==GameState.STATE_PLAY: return
             if self.state==Tower.State.AIM:
-                await asyncio.sleep(self.fire_delay)
-                self.target.health-=self.power
                 self.state=Tower.State.FIRE
+
+                self.target.health-=self.power
+                await asyncio.sleep(self.fire_delay)                
             await asyncio.sleep(0.01)
 
     async def reload(self):
