@@ -6,14 +6,14 @@ from timeline import Timeline
 from controls import Input
 from game import Game
 from vislayers import Background, Foreground
-from models import Grid
+from models import Grid, PackageList
 from runners import MonsterRunner, TowerRunner
 from pathfinder import AStar
 class MainLoop:
     def __init__(self):
         pass
     async def run(self):
-        b=Background(Game.screen_width,Game.screen_height)
+        b=Background(Game.screen_width,Game.screen_height) 
         f=Foreground(Game.screen_width,Game.screen_height)
         while True:
             b.draw()
@@ -32,11 +32,13 @@ if __name__ == '__main__':
     mi=Input()
     mm=MonsterRunner()
     tr=TowerRunner()
+    pkl=PackageList()
     loop.create_task(ml.run())
     loop.create_task(t.flow())
     loop.create_task(mi.handle())
     loop.create_task(mm.run())
     loop.create_task(tr.run())
+    loop.create_task(pkl.process_package())
     loop.run_forever()
     print('game quit')
     pygame.quit()

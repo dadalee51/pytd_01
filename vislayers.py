@@ -3,8 +3,9 @@
 #includes background, foregrounds, text, also button appearances
 import pygame
 from game import Game, PlayerState
-from models import Monster,Grid, Tower
+from models import Monster,Grid, Tower, Package, PackageList
 from enum import Enum, auto
+import math
 class Settings():
     MENU_HEIGHT=150
     MENU_WIDTH=140
@@ -60,6 +61,7 @@ class Background(Layer):
 
 class Foreground(Layer):
     def __init__(self, sw,sh):
+        self.pad=Grid.grid_size//2
         self.player_menu_pos=pygame.mouse.get_pos()
         super().__init__(sw,sh)
         
@@ -70,22 +72,23 @@ class Foreground(Layer):
                 #draw health of monster
                 text = Game.font.render(str(m.health), True, (0,0,0))
                 Game.screen.blit(text,(Game.x_left_padding+m.posx,Game.y_top_padding+m.posy-3*m.size,30,30))
-
-  
+ 
     def draw_towers(self):
         px,py=Game.x_left_padding,Game.y_top_padding
-        pad=Grid.grid_size//2
-        off=t.size//2
         for t in Game.towers:
-            pygame.draw.rect(self.sf,t.color, (t.posx+pad-off, t.posy+pad-off,t.size,t.size))
+            off=t.size//2
+            pygame.draw.rect(self.sf,t.color, (t.posx+self.pad-off, t.posy+self.pad-off,t.size,t.size))
             #then process each tower's state:
             if t.state==Tower.State.AIM:
-                #pygame.draw.line(self.sf,t.color,(pad+t.posx,pad+t.posy),(px+t.target.posx,py+t.target.posy))
-                pass
+                pygame.draw.line(self.sf,(255,0,0),(t.posx+self.pad,t.posy+self.pad),(int(math.sin(t.aim_direction)*20+(t.posx+self.pad)),int(math.cos(t.aim_direction)*20+(t.posy+self.pad))))
             elif t.state==Tower.State.FIRE:
-                pygame.draw.line(self.sf,(255,0,0),(pad+t.posx,pad+t.posy),(px+t.target.posx,py+t.target.posy),width=1)
+                pygame.draw.line(self.sf,(255,0,0),(t.posx+self.pad,t.posy+self.pad),(int(math.sin(t.aim_direction)*20+(t.posx+self.pad)),int(math.cos(t.aim_direction)*20+(t.posy+self.pad))))
             elif t.state==Tower.State.RELOAD:
                 pass
+    def draw_packages(self):
+        for pk in PackageList.pk_list:
+            pygame.draw.circle(self.sf,(40,255,50),(self.pad+pk.px, self.pad+pk.py),3)
+    
     def draw_text(self):
         text = Game.font.render(Game.instructions, True, (255,255,50))
         Game.screen.blit(text,(0,0,30,30))
@@ -131,6 +134,7 @@ class Foreground(Layer):
         self.draw_path()
         self.draw_towers()
         self.draw_monsters()
+        self.draw_packages()
         self.draw_text()
         if Game.player_state==PlayerState.PLAYER_MENU_SET:
             self.draw_player_menu_set()

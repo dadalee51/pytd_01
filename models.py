@@ -16,13 +16,48 @@ class PackageList:
     pk_list=[]
     #update package delivery status, once they arrive, mark the designations
 
+    #add who time by 0.1 sec
+    @staticmethod
+    async def process_package():
+        while True:
+            await asyncio.sleep(0.01)
+            for pk in PackageList.pk_list:
+                if pk.gone: 
+                    PackageList.pk_list.remove(pk)
+                    continue
+                #detect collision with monsters
+                for target in Game.monsters:
+                    if target.posx-target.size+Game.x_left_padding < pk.px < target.posx+target.size+Game.x_left_padding and \
+                        target.posy-target.size+Game.y_top_padding < pk.py < target.posy+target.size+Game.y_top_padding:
+                        target.health-=pk.power
+                        target.state=MonsterState.HIT
+                        pk.gone=True
+                        continue
+                    if pk.fly_time<pk.fly_lim:
+                        pk.fly_time+=0.1
+                        pk.px+= math.sin(pk.dir) * pk.fly_speed
+                        pk.py+= math.cos(pk.dir) * pk.fly_speed
+                    else:
+                        pk.gone=True
+
+
 class Package:
-    def __init__(self,px,py,direction):
+    def __init__(self,px,py,direction, fly_lim, fly_speed):
         self.px=px
         self.py=py
-        self.dir=direction
+        self.dir=direction #degrees from 12 o clock
+        self.fly_time=0 #this is counter
+        self.fly_lim=fly_lim
+        self.fly_speed=fly_speed
+        self.gone=False
+        self.power=10
+
+class MonsterState(Enum):
+    NORMAL=auto()
+    HIT=auto()
 
 class Monster:
+
     def __init__(self,id,health,posx,posy,color,size, index, speed):
         self.id=id
         self.health=health #initial health
@@ -32,6 +67,7 @@ class Monster:
         self.size=size
         self.index=index
         self.speed=speed
+        self.state=MonsterState.NORMAL
 
     def ballistic_hit(self):
         pass
@@ -44,7 +80,7 @@ class Tower:
         FIRE=auto()
         RELOAD=auto()
     def tatan2(self,a,b):
-        return round(math.degrees(math.atan2(a,b)),2)
+        return round((math.atan2(a,b)),2)
     def __init__(self,id,posx,posy,color,size,effect_range):
         self.id=id
         self.power=1
@@ -57,12 +93,15 @@ class Tower:
         self.fire_delay=1
         self.reload_delay=0.5
         #dynamic changes
-        self.aim_direction=[0,0]
+        self.aim_direction=0
         self.reload_time=100
         self.target=None
         self.fired=0
         self.state=Tower.State.IDLE
         self.reloading=0
+        self.fly_lim=2
+        self.fly_speed=2
+    #AIM
     async def detect_monster(self): #IDLE to AIM
         while True:
             if not Game.state==GameState.STATE_PLAY: return
@@ -72,22 +111,26 @@ class Tower:
                 calc_range=math.sqrt((mx-self.posx)**2+(my-self.posy)**2)
                 #print(calc_range)
                 if calc_range<=self.effect_range:
+                #if True:
+                    self.state=Tower.State.AIM
                     self.target=m
-                    self.aim_direction=self.tatan2(m.posx-self.posx, m.posy-self.posy)
+                    self.aim_direction=self.tatan2(mx-self.posx, my-self.posy)
+                    #print('aim:',self.aim_direction)
                     self.state=Tower.State.AIM
                     await asyncio.sleep(self.aim_delay)
+                    continue
             await asyncio.sleep(0.01)
         self.state=Tower.State.IDLE
+    #FIRE
     async def attack_monster(self): #AIM to FIRE
         while True:
             if not Game.state==GameState.STATE_PLAY: return
             if self.state==Tower.State.AIM:
                 self.state=Tower.State.FIRE
-
-                self.target.health-=self.power
+                PackageList.pk_list.append(Package(self.posx,self.posy,self.aim_direction,self.fly_lim,self.fly_speed))
                 await asyncio.sleep(self.fire_delay)                
             await asyncio.sleep(0.01)
-
+    #RELOAD
     async def reload(self):
         while True:
             if not Game.state==GameState.STATE_PLAY: return
