@@ -47,7 +47,7 @@ class PackageList:
                         pk.py+= math.cos(pk.dir) * pk.fly_speed
                     else:
                         pk.gone=True
-            await asyncio.sleep(0.000001)
+            await asyncio.sleep(0.0000001)
 
 class Package:
     def __init__(self,px,py,direction, fly_lim, fly_speed):
@@ -110,8 +110,8 @@ class Tower:
         self.fired=0
         self.state=Tower.State.IDLE
         self.reloading=0
-        self.fly_lim=200
-        self.fly_speed=0.05
+        self.fly_lim=1000
+        self.fly_speed=1
     #AIM
     async def detect_monster(self): #IDLE to AIM
         while True:
