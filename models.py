@@ -21,13 +21,11 @@ class PackageList:
     @staticmethod
     async def process_package():
         while True:
-            await asyncio.sleep(0.0001)
             for pk in PackageList.pk_list:
                 if pk.gone: 
                     PackageList.pk_list.remove(pk)
                     continue
                 #detect collision with monsters
-
                 for target in Game.monsters:
                     if Game.x_left_padding+target.posx-pk.size*pk.effect_range <= pk.px <= Game.x_left_padding+target.posx+pk.size*pk.effect_range and \
                         Game.y_top_padding+target.posy-pk.size*pk.effect_range <= pk.py <= Game.y_top_padding+target.posy+pk.size*pk.effect_range:
@@ -49,7 +47,7 @@ class PackageList:
                         pk.py+= math.cos(pk.dir) * pk.fly_speed
                     else:
                         pk.gone=True
-
+            await asyncio.sleep(0.000001)
 
 class Package:
     def __init__(self,px,py,direction, fly_lim, fly_speed):
