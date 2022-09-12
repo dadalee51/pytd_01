@@ -1,6 +1,6 @@
 '''Timeline module ©️ Tigo.robotics 2022'''
 import asyncio
-from game import Game
+from game import Game, GameState
 '''
 each timeline keeps track of a certain event that should be 
 happening in sequence.
@@ -15,7 +15,9 @@ class Timeline:
     async def flow(self):
         while True:
             if self.debug:print(Game.current_mode, Game.build_state, Game.player_state)
-            await asyncio.sleep(1)
+            if Game.life==0:
+                Game.state=GameState.STATE_OVER
+            await asyncio.sleep(0.01)
 
 
 

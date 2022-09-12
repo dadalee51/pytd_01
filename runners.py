@@ -80,8 +80,15 @@ class MonsterRunner:
                     if e.state==MonsterState.NORMAL:
                         e.color=(0,0,0)
                     else:
+                        #flash the monster when hit.
                         e.color=(255,255,255)
                         e.state=MonsterState.NORMAL
+                    #If monster arrive at goal, take away game life
+                    if (Grid.goal_x)*Grid.grid_size <= e.posx <= (Grid.goal_x+1)*Grid.grid_size and\
+                       (Grid.goal_y)*Grid.grid_size <= e.posy <= (Grid.goal_y+1)*Grid.grid_size:
+                        Game.life-=10
+                        Game.monsters.remove(e)
+                        continue
             elif Game.state==GameState.STATE_SAVE:
                 #call file_utils to save the file, then quickly send state to IDLE
                 FileAction.write_to_file(Grid.grid)

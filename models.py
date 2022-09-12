@@ -38,12 +38,12 @@ class PackageList:
                             target.size+pk.size*pk.effect_range,
                             target.size+pk.size*pk.effect_range
                         )'''
-                        pk.color=(255,255,255)
+                        pk.color=(255,255,255,50)
                         target.health-=pk.power
                         target.state=MonsterState.HIT
                         pk.gone=True
                         continue
-                    if pk.fly_time<pk.fly_lim:
+                    if pk.fly_time<=pk.fly_lim:
                         pk.fly_time+=0.1
                         pk.px+= math.sin(pk.dir) * pk.fly_speed
                         pk.py+= math.cos(pk.dir) * pk.fly_speed

@@ -8,6 +8,7 @@ class GameState(Enum):
     STATE_CONFIG=auto()
     STATE_IDLE=auto()
     STATE_QUIT=auto()
+    STATE_OVER=auto()
     
 class PlayerState(Enum):
     PLAYER_NORMAL=auto()
@@ -61,7 +62,7 @@ class Game:
     build_state=BuildState.WALL
     font =None
     buttons=dict()
-    instructions='Drag and Drop the green(start) or red(goal), click empty or drag black blocks to create barrier.'       
+    instructions='Drag start and goal to move, right-click to choose mode, drag on empty blocks to create walls. Q-quit game'
     score=0 #game score
     life = 100 #need a limit of the game, when tower life reaches zero, game over.
 

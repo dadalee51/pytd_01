@@ -2,7 +2,7 @@
 #provide several layers of visuals in this code.
 #includes background, foregrounds, text, also button appearances
 import pygame
-from game import Game, PlayerState
+from game import Game, PlayerState, GameState
 from models import Monster,Grid, Tower, Package, PackageList
 from enum import Enum, auto
 import math
@@ -53,11 +53,17 @@ class Background(Layer):
         self.create_button('save','SaveMap',btn_clr,320,30)
         self.create_button('load','LoadMap',btn_clr,460,30)
 
+    def draw_endgame(self):
+        pass
+
     #umbrella draw function
     def draw(self):
         Game.screen.fill((30,30,30))
-        self.draw_grid()
-        Game.screen.blit(self.sf,(0,0))
+        if Game.state==GameState.STATE_OVER:
+            self.draw_endgame()
+        else:   
+            self.draw_grid()
+            Game.screen.blit(self.sf,(0,0))
 
 class Foreground(Layer):
     def __init__(self, sw,sh):
@@ -101,6 +107,19 @@ class Foreground(Layer):
         Game.screen.blit(game_score,(0,60,30,30))
         Game.screen.blit(game_life,(0,90,30,30))
 
+    def draw_endgame(self):
+        text = Game.font.render('Game Over', True, (255,255,50))
+        text2 = Game.font.render('q-QUIT or ENTER-restart', True, (255,255,50))
+        game_score = Game.font.render('Score:  '+str(Game.score), True, (255,255,255))
+        game_life = Game.font.render('Health:  '+str(Game.life), True, (255,255,255))
+        cx=Game.disp_width//2
+        cy=Game.disp_height//2
+        Game.screen.blit(text,(cx,cy,30,30))
+        Game.screen.blit(text2,(cx,cy+20,30,30))        
+        Game.screen.blit(game_score,(cx,cy+60,30,30))
+        Game.screen.blit(game_life,(cx,cy+90,30,30))
+
+
     def draw_path(self):
         for p in Grid.current_path:
             ncolr=(0,255,255,100)
@@ -137,18 +156,21 @@ class Foreground(Layer):
     #umbrella draw function
     def draw(self):
         self.sf.fill((0,0,0,0))
-        #draw solved pathway - is it allowed here?
-        Grid.current_path=Grid.astar.solve()
-        self.draw_path()
-        self.draw_towers()
-        self.draw_monsters()
-        self.draw_packages()
-        self.draw_text()
-        #self.draw_debug()
-        #debug draw rect for detection
-        if Game.player_state==PlayerState.PLAYER_MENU_SET:
-            self.draw_player_menu_set()
-        elif Game.player_state==PlayerState.PLAYER_MENU_SHOW:
-            self.draw_player_menu_show()
+        if Game.state==GameState.STATE_OVER:
+            self.draw_endgame()
+        else:    
+            #draw solved pathway - is it allowed here?
+            Grid.current_path=Grid.astar.solve()
+            self.draw_path()
+            self.draw_towers()
+            self.draw_monsters()
+            self.draw_packages()
+            self.draw_text()
+            #self.draw_debug()
+            #debug draw rect for detection
+            if Game.player_state==PlayerState.PLAYER_MENU_SET:
+                self.draw_player_menu_set()
+            elif Game.player_state==PlayerState.PLAYER_MENU_SHOW:
+                self.draw_player_menu_show()
 
-        Game.screen.blit(self.sf,(0,0))
+            Game.screen.blit(self.sf,(0,0))
