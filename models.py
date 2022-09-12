@@ -140,7 +140,7 @@ class Tower:
             if not Game.state==GameState.STATE_PLAY: return
             if self.state==Tower.State.AIM:
                 self.state=Tower.State.FIRE
-                PackageList.pk_list.append(Package(self.posx,self.posy,self.aim_direction,self.fly_lim,self.fly_speed))
+                PackageList.pk_list.append(Package(self.posx+Grid.grid_size//2,self.posy+Grid.grid_size//2,self.aim_direction,self.fly_lim,self.fly_speed))
                 await asyncio.sleep(self.fire_delay)                
             await asyncio.sleep(0.001)
     #RELOAD
