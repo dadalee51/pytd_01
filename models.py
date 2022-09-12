@@ -8,7 +8,8 @@ from pathfinder import AStar
 from file_utils import FileAction
 import math
 from enum import Enum,auto
-
+from random import randint
+#there is a bug in monster's posx and posy -- needs to be absolute?
 #a class that stores all deliveries, ballistics and energy beams, elements in 2d plane, 
 #once charges left the towers, they belong to the forces of nature.
 #named it packages because it may contain other things.
@@ -20,15 +21,24 @@ class PackageList:
     @staticmethod
     async def process_package():
         while True:
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.0001)
             for pk in PackageList.pk_list:
                 if pk.gone: 
                     PackageList.pk_list.remove(pk)
                     continue
                 #detect collision with monsters
+
                 for target in Game.monsters:
-                    if target.posx-target.size+Game.x_left_padding < pk.px < target.posx+target.size+Game.x_left_padding and \
-                        target.posy-target.size+Game.y_top_padding < pk.py < target.posy+target.size+Game.y_top_padding:
+                    if Game.x_left_padding+target.posx-pk.size*pk.effect_range <= pk.px <= Game.x_left_padding+target.posx+pk.size*pk.effect_range and \
+                        Game.y_top_padding+target.posy-pk.size*pk.effect_range <= pk.py <= Game.y_top_padding+target.posy+pk.size*pk.effect_range:
+                        '''
+                        Game.debug_rect=(
+                            Game.x_left_padding+target.posx-pk.size*pk.effect_range,
+                            Game.y_top_padding+target.posy-pk.size*pk.effect_range,
+                            target.size+pk.size*pk.effect_range,
+                            target.size+pk.size*pk.effect_range
+                        )'''
+                        pk.color=(255,255,255)
                         target.health-=pk.power
                         target.state=MonsterState.HIT
                         pk.gone=True
@@ -51,6 +61,9 @@ class Package:
         self.fly_speed=fly_speed
         self.gone=False
         self.power=10
+        self.size=1
+        self.effect_range=5
+        self.color=(randint(0,255),randint(0,255),0)
 
 class MonsterState(Enum):
     NORMAL=auto()
@@ -94,13 +107,13 @@ class Tower:
         self.reload_delay=0.5
         #dynamic changes
         self.aim_direction=0
-        self.reload_time=100
+        self.reload_time=10
         self.target=None
         self.fired=0
         self.state=Tower.State.IDLE
         self.reloading=0
-        self.fly_lim=2
-        self.fly_speed=2
+        self.fly_lim=200
+        self.fly_speed=0.05
     #AIM
     async def detect_monster(self): #IDLE to AIM
         while True:
@@ -119,7 +132,7 @@ class Tower:
                     self.state=Tower.State.AIM
                     await asyncio.sleep(self.aim_delay)
                     continue
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.001)
         self.state=Tower.State.IDLE
     #FIRE
     async def attack_monster(self): #AIM to FIRE
@@ -129,7 +142,7 @@ class Tower:
                 self.state=Tower.State.FIRE
                 PackageList.pk_list.append(Package(self.posx,self.posy,self.aim_direction,self.fly_lim,self.fly_speed))
                 await asyncio.sleep(self.fire_delay)                
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.001)
     #RELOAD
     async def reload(self):
         while True:

@@ -87,11 +87,19 @@ class Foreground(Layer):
                 pass
     def draw_packages(self):
         for pk in PackageList.pk_list:
-            pygame.draw.circle(self.sf,(40,255,50),(self.pad+pk.px, self.pad+pk.py),3)
+            pygame.draw.circle(self.sf,pk.color,(pk.px, pk.py),pk.size)
     
+    def draw_debug(self):      
+        pygame.draw.rect(self.sf,(255,255,255),Game.debug_rect)
+
     def draw_text(self):
         text = Game.font.render(Game.instructions, True, (255,255,50))
+        game_score = Game.font.render('Score:  '+str(Game.score), True, (255,255,255))
+        game_life = Game.font.render('Health:  '+str(Game.life), True, (255,255,255))
+
         Game.screen.blit(text,(0,0,30,30))
+        Game.screen.blit(game_score,(0,60,30,30))
+        Game.screen.blit(game_life,(0,90,30,30))
 
     def draw_path(self):
         for p in Grid.current_path:
@@ -136,6 +144,8 @@ class Foreground(Layer):
         self.draw_monsters()
         self.draw_packages()
         self.draw_text()
+        #self.draw_debug()
+        #debug draw rect for detection
         if Game.player_state==PlayerState.PLAYER_MENU_SET:
             self.draw_player_menu_set()
         elif Game.player_state==PlayerState.PLAYER_MENU_SHOW:

@@ -62,3 +62,8 @@ class Game:
     font =None
     buttons=dict()
     instructions='Drag and Drop the green(start) or red(goal), click empty or drag black blocks to create barrier.'       
+    score=0 #game score
+    life = 100 #need a limit of the game, when tower life reaches zero, game over.
+
+    debug_rect=(0,0,1,1)
+    

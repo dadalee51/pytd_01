@@ -56,9 +56,11 @@ class MonsterRunner:
                     e.posx=Grid.start_x*Grid.grid_size+Grid.grid_size/2
                     e.posy=Grid.start_y*Grid.grid_size+Grid.grid_size/2
                     e.index=1
+                Game.life=100 #reset to 100
             elif Game.state==GameState.STATE_PLAY:
                 for e in Game.monsters:
                     if e.health<0:
+                        Game.score+=1
                         Game.monsters.remove(e)
                         continue
                     if e.index >= len(Grid.current_path):continue
