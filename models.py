@@ -90,7 +90,7 @@ class Tower:
         self.size=size
         self.effect_range=effect_range
         self.aim_delay=0.5
-        self.fire_delay=0.5
+        self.fire_delay=1
         self.reload_delay=0.5
         #dynamic changes
         self.aim_direction=0
