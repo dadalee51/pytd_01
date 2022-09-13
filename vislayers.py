@@ -83,12 +83,12 @@ class Foreground(Layer):
         px,py=Game.x_left_padding,Game.y_top_padding
         for t in Game.towers:
             off=t.size//2
-            pygame.draw.rect(self.sf,t.color, (t.posx+self.pad-off, t.posy+self.pad-off,t.size,t.size))
+            pygame.draw.rect(self.sf,t.color, (t.cenx-off, t.ceny-off,t.size,t.size))
             #then process each tower's state:
             if t.state==Tower.State.AIM:
-                pygame.draw.line(self.sf,(255,0,0),(t.posx+self.pad,t.posy+self.pad),(int(math.sin(t.aim_direction)*20+(t.posx+self.pad)),int(math.cos(t.aim_direction)*20+(t.posy+self.pad))))
+                pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),(int(math.sin(t.aim_direction)*20+(t.cenx)),int(math.cos(t.aim_direction)*20+(t.ceny))))
             elif t.state==Tower.State.FIRE:
-                pygame.draw.line(self.sf,(255,0,0),(t.posx+self.pad,t.posy+self.pad),(int(math.sin(t.aim_direction)*20+(t.posx+self.pad)),int(math.cos(t.aim_direction)*20+(t.posy+self.pad))))
+                pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),(int(math.sin(t.aim_direction)*20+(t.cenx)),int(math.cos(t.aim_direction)*20+(t.ceny))))
             elif t.state==Tower.State.RELOAD:
                 pass
     def draw_packages(self):

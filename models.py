@@ -9,15 +9,8 @@ from file_utils import FileAction
 import math
 from enum import Enum,auto
 from random import randint
-#there is a bug in monster's posx and posy -- needs to be absolute?
-#a class that stores all deliveries, ballistics and energy beams, elements in 2d plane, 
-#once charges left the towers, they belong to the forces of nature.
-#named it packages because it may contain other things.
 class PackageList:
     pk_list=[]
-    #update package delivery status, once they arrive, mark the designations
-
-    #add who time by 0.1 sec
     @staticmethod
     async def process_package():
         while True:
@@ -29,25 +22,19 @@ class PackageList:
                 for target in Game.monsters:
                     if Game.x_left_padding+target.posx-pk.size*pk.effect_range <= pk.px <= Game.x_left_padding+target.posx+pk.size*pk.effect_range and \
                         Game.y_top_padding+target.posy-pk.size*pk.effect_range <= pk.py <= Game.y_top_padding+target.posy+pk.size*pk.effect_range:
-                        '''
-                        Game.debug_rect=(
-                            Game.x_left_padding+target.posx-pk.size*pk.effect_range,
-                            Game.y_top_padding+target.posy-pk.size*pk.effect_range,
-                            target.size+pk.size*pk.effect_range,
-                            target.size+pk.size*pk.effect_range
-                        )'''
                         pk.color=(255,255,255,50)
                         target.health-=pk.power
                         target.state=MonsterState.HIT
                         pk.gone=True
                         continue
-                    if pk.fly_time<=pk.fly_lim:
-                        pk.fly_time+=0.1
-                        pk.px+= math.sin(pk.dir) * pk.fly_speed
-                        pk.py+= math.cos(pk.dir) * pk.fly_speed
-                    else:
-                        pk.gone=True
-            await asyncio.sleep(0.0000001)
+                if pk.fly_time<=pk.fly_lim:
+                    pk.fly_time+=0.1
+                    pk.px+= math.sin(pk.dir) * pk.fly_speed
+                    pk.py+= math.cos(pk.dir) * pk.fly_speed
+                else:
+                    pk.gone=True    
+            await asyncio.sleep(0.01)
+
 
 class Package:
     def __init__(self,px,py,direction, fly_lim, fly_speed):
@@ -97,11 +84,13 @@ class Tower:
         self.power=1
         self.posx=posx
         self.posy=posy
+        self.cenx=posx+Grid.grid_size//2
+        self.ceny=posy+Grid.grid_size//2
         self.color=color
         self.size=size
         self.effect_range=effect_range
-        self.aim_delay=1
-        self.fire_delay=1
+        self.aim_delay=0.5
+        self.fire_delay=0.5
         self.reload_delay=0.5
         #dynamic changes
         self.aim_direction=0
@@ -110,7 +99,7 @@ class Tower:
         self.fired=0
         self.state=Tower.State.IDLE
         self.reloading=0
-        self.fly_lim=1000
+        self.fly_lim=10
         self.fly_speed=1
     #AIM
     async def detect_monster(self): #IDLE to AIM
@@ -119,13 +108,13 @@ class Tower:
             for m in Game.monsters:
                 mx=m.posx+Game.x_left_padding
                 my=m.posy+Game.y_top_padding
-                calc_range=math.sqrt((mx-self.posx)**2+(my-self.posy)**2)
+                calc_range=math.sqrt((mx-self.cenx)**2+(my-self.ceny)**2)
                 #print(calc_range)
                 if calc_range<=self.effect_range:
                 #if True:
                     self.state=Tower.State.AIM
                     self.target=m
-                    self.aim_direction=self.tatan2(mx-self.posx, my-self.posy)
+                    self.aim_direction=self.tatan2(mx-self.cenx, my-self.ceny)
                     #print('aim:',self.aim_direction)
                     self.state=Tower.State.AIM
                     await asyncio.sleep(self.aim_delay)
@@ -138,7 +127,7 @@ class Tower:
             if not Game.state==GameState.STATE_PLAY: return
             if self.state==Tower.State.AIM:
                 self.state=Tower.State.FIRE
-                PackageList.pk_list.append(Package(self.posx+Grid.grid_size//2,self.posy+Grid.grid_size//2,self.aim_direction,self.fly_lim,self.fly_speed))
+                PackageList.pk_list.append(Package(self.cenx,self.ceny,self.aim_direction,self.fly_lim,self.fly_speed))
                 await asyncio.sleep(self.fire_delay)                
             await asyncio.sleep(0.001)
     #RELOAD

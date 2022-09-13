@@ -102,6 +102,6 @@ class MonsterRunner:
                 Game.state=GameState.STATE_IDLE
             elif Game.state==GameState.STATE_CONFIG:
                 pass
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.05)
 
 

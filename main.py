@@ -19,7 +19,7 @@ class MainLoop:
             b.draw()
             f.draw()
             pygame.display.flip()
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.0001)
 if __name__ == '__main__':
     pygame.init()
     loop=asyncio.get_event_loop()
