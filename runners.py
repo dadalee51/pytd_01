@@ -16,7 +16,13 @@ class TowerRunner:
         for j,row in enumerate(Grid.grid):
             for i,cell in enumerate(row):
                 if cell >= 10 and cell <=1000:
-                    twr=Tower('tower'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,0,100),10,100)
+                    if cell==10:
+                        twr=Tower('tower'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,0,100),10,100)
+                        twr.type=0
+                    elif cell==11:
+                        twr=Tower('tower2'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,0,100),10,100)
+                        twr.power=20
+                        twr.type=1
                     Game.towers.append(twr)
                      #go through all towers
         for t in Game.towers:
@@ -47,7 +53,12 @@ class MonsterRunner:
     @staticmethod
     def regenerate_monsters():
         m =Monster('aMon', 100,Grid.start_x*Grid.grid_size,Grid.start_y*Grid.grid_size, (50,0,50), 5, 1, 1)
+        m2 =Monster('bMon', 100,Grid.start_x*Grid.grid_size,Grid.start_y*Grid.grid_size, (50,0,50), 5, 1, 1)
+        m2.speed=5
+        m2.color=(255,0,0)
+        m2.size=20
         Game.monsters.append(m)
+        Game.monsters.append(m2)
     #produce and track monsters
     async def run(self):
         while True:

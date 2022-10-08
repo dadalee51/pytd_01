@@ -80,6 +80,7 @@ class Node:
     def calc_f_cost(self,target):
         self.h_cost=sqrt((self.x-target.x)**2 + (self.y-target.y)**2)
         self.f_cost=self.h_cost+self.g_cost
+        #self.f_cost=self.h_cost
 class AStar:
     def get_node_string(self, number):
         if number<=90 and number>=65:
@@ -104,7 +105,7 @@ class AStar:
         #going through all item in this 2d array
         for y,i in enumerate(self.data):
             for x,j in enumerate(i):
-                if self.data[y][x] in (0,10):
+                if self.data[y][x] in (0,10,11):
                     self.data[y][x]=None
                 else:
                     if self.data[y][x]==2:

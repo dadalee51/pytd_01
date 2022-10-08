@@ -32,6 +32,9 @@ class Background(Layer):
                 if Grid.grid[j][i]==10:
                     #tower
                     ncolr=(255,255,0)
+                elif Grid.grid[j][i]==11:
+                    #laser tower
+                    ncolr=(155,52,235)
                 elif Grid.astar.data[j][i]:
                     ncolr=(100,100,100)
                     if Grid.astar.data[j][i].name==Grid.astar.start:
@@ -88,7 +91,10 @@ class Foreground(Layer):
             if t.state==Tower.State.AIM:
                 pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),(int(math.sin(t.aim_direction)*20+(t.cenx)),int(math.cos(t.aim_direction)*20+(t.ceny))))
             elif t.state==Tower.State.FIRE:
-                pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),(int(math.sin(t.aim_direction)*20+(t.cenx)),int(math.cos(t.aim_direction)*20+(t.ceny))))
+                if t.type==0:
+                    pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),(int(math.sin(t.aim_direction)*20+(t.cenx)),int(math.cos(t.aim_direction)*20+(t.ceny))))
+                elif t.type==1:
+                    pygame.draw.line(self.sf,(0,255,0),(t.cenx,t.ceny),(t.target.posx+px,t.target.posy+py))
             elif t.state==Tower.State.RELOAD:
                 pass
     def draw_packages(self):
@@ -152,6 +158,7 @@ class Foreground(Layer):
         self.create_button('path','CreatePath',(200,200,200),mpos[0]+10,mpos[1]+10)
         self.create_button('wall','CreateWall',(200,200,200),mpos[0]+10,mpos[1]+35)
         self.create_button('tower1','BasicTower',(200,200,200),mpos[0]+10,mpos[1]+60)
+        self.create_button('tower2','LaserTower',(200,200,200),mpos[0]+10,mpos[1]+85)
 
     #umbrella draw function
     def draw(self):
