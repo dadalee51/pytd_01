@@ -102,7 +102,8 @@ class AStar:
             print('pdf04:WARNING:in_grid is empty, creating an example Grid')
             in_grid=[[3,1,1,0,1,1,1,1],
                      [1,1,1,1,1,0,1,1],
-                     [1,1,1,1,0,1,1,2]]
+                     [1,1,1,1,0,1,1,2],
+                     [1,1,1,0,0,0,0,0]]
         self.data=deepcopy(in_grid)
         a=0 #keep track of index
         #going through all item in this 2d array
