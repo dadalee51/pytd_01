@@ -104,7 +104,7 @@ class AStar:
                      [1,1,1,1,1,0,1,1],
                      [1,1,1,1,0,1,1,2]]
         self.data=deepcopy(in_grid)
-        a=1 #keep track of index
+        a=0 #keep track of index
         #going through all item in this 2d array
         for y,i in enumerate(self.data):
             for x,j in enumerate(i):
