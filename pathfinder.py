@@ -2,17 +2,17 @@
 #package for AStar algorithm
 from math import sqrt, log
 from copy import deepcopy
+#toAAA
+from math import sqrt, log
 def toAAA(number):
-    debug=0
+    debug=1
     SYMB_RANGE=26 #this is the range of characters we want to select from
     SYMB_BEG=65 #this is the beginning number of characters from unicode
     #use following to unlock Chinese characters
     #SYMB_RANGE=0x9FFF-0x4E00
     #SYMB_BEG=0x4E00
-    if debug:print('started:',number, end=',')
-    current = number-1
-    if debug:print('process as:',current)
-    if current>=SYMB_RANGE:
+    current = number
+    if current >= SYMB_RANGE:
         num_iter=log(current) // log(SYMB_RANGE)
         num_iter=int(num_iter)
     else:
@@ -20,15 +20,18 @@ def toAAA(number):
     buff=''
     while num_iter >= 0:
         offset=current//SYMB_RANGE**num_iter
-        current=current%SYMB_RANGE**num_iter
-        if num_iter>0:
-            offset-=1
-            if offset<0:offset=0
-        if debug:print('after modulo, offset is:',offset,'current is:',current)
+        offset %= SYMB_RANGE
         buff+=str(chr(SYMB_BEG+offset))
         num_iter-=1
-    if debug:print('result:',buff)
     return buff
+
+#knowing 'AAA' means 000 which is just 0
+#assert 'A' == toAAA(0)
+#assert 'B' == toAAA(1)
+#assert 'Z' == toAAA(25)
+#assert 'BA' == toAAA(26)
+#assert 'BAA' == toAAA(676)
+
 
 class Node:
     def __init__(self,name):
@@ -80,6 +83,7 @@ class Node:
     def calc_f_cost(self,target):
         self.h_cost=sqrt((self.x-target.x)**2 + (self.y-target.y)**2)
         self.f_cost=self.h_cost+self.g_cost
+        #self.f_cost=self.h_cost
 class AStar:
     def get_node_string(self, number):
         if number<=90 and number>=65:
@@ -98,13 +102,14 @@ class AStar:
             print('pdf04:WARNING:in_grid is empty, creating an example Grid')
             in_grid=[[3,1,1,0,1,1,1,1],
                      [1,1,1,1,1,0,1,1],
-                     [1,1,1,1,0,1,1,2]]
+                     [1,1,1,1,0,1,1,2],
+                     [1,1,1,0,0,0,0,0]]
         self.data=deepcopy(in_grid)
-        a=1 #keep track of index
+        a=0 #keep track of index
         #going through all item in this 2d array
         for y,i in enumerate(self.data):
             for x,j in enumerate(i):
-                if self.data[y][x] in (0,10):
+                if self.data[y][x] in (0,10,11):
                     self.data[y][x]=None
                 else:
                     if self.data[y][x]==2:

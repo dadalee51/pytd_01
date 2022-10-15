@@ -46,7 +46,7 @@ class Package:
         self.fly_speed=fly_speed
         self.gone=False
         self.power=10
-        self.size=1
+        self.size=2
         self.effect_range=5
         self.color=(randint(0,255),randint(0,255),0)
 
@@ -101,6 +101,7 @@ class Tower:
         self.reloading=0
         self.fly_lim=10
         self.fly_speed=1
+        self.type=0
     #AIM
     async def detect_monster(self): #IDLE to AIM
         while True:
@@ -127,7 +128,10 @@ class Tower:
             if not Game.state==GameState.STATE_PLAY: return
             if self.state==Tower.State.AIM:
                 self.state=Tower.State.FIRE
-                PackageList.pk_list.append(Package(self.cenx,self.ceny,self.aim_direction,self.fly_lim,self.fly_speed))
+                if self.type==0:
+                    PackageList.pk_list.append(Package(self.cenx,self.ceny,self.aim_direction,self.fly_lim,self.fly_speed))
+                elif self.type==1:
+                    self.target.health-=self.power
                 await asyncio.sleep(self.fire_delay)                
             await asyncio.sleep(0.001)
     #RELOAD
@@ -198,6 +202,8 @@ class Grid:
             grid[ey][ex]=0
         elif Game.current_mode==10:
             grid[ey][ex]=10
+        elif Game.current_mode==11:
+            grid[ey][ex]=11
         else:
             grid[ey][ex]=Game.current_mode
             grid[sy][sx]=1

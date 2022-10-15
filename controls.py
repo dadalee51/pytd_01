@@ -41,6 +41,9 @@ class Input:
         if Game.buttons['tower1'].collidepoint(mpos):
             Game.build_state=BuildState.TOWER
             Game.current_mode=10
+        if Game.buttons['tower2'].collidepoint(mpos):
+            Game.build_state=BuildState.TOWER
+            Game.current_mode=11
     def on_left_up(self):
         if Game.player_state==PlayerState.PLAYER_MENU_SHOW:
             self.on_mouse_up()
