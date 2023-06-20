@@ -1,4 +1,4 @@
-'''game singleton module ©️ Tigo.robotics 2022'''
+'''game singleton module by Tigo.robotics 2022,2023'''
 import pygame
 from enum import Enum, auto
 class GameState(Enum):

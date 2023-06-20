@@ -1,4 +1,4 @@
-'''Timeline module ©️ Tigo.robotics 2022, 2023'''
+'''Timeline module by Tigo.robotics 2022,2023'''
 import asyncio
 from game import Game, GameState
 '''

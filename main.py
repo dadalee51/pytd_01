@@ -1,4 +1,4 @@
-'''main loop ©️ Tigo.robotics 2022'''
+'''main loop by Tigo.robotics 2022,2023'''
 import pygame
 import asyncio
 import sys

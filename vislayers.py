@@ -1,4 +1,4 @@
-'''Visual module ©️ Tigo.robotics 2022'''
+'''Visual module by Tigo.robotics 2022,2023'''
 #provide several layers of visuals in this code.
 #includes background, foregrounds, text, also button appearances
 import pygame

@@ -1,4 +1,4 @@
-pytd_01 is a educational tower defence game written for school holidays during Tigo.Robotics 2022
+pytd_01 is a educational tower defence game written for school holidays by Tigo.Robotics 2022,2023
 mpl-2.0 license applied.
 
 

@@ -1,4 +1,4 @@
-'''Control module ©️ Tigo.robotics 2022'''
+'''Control module by Tigo.robotics 2022,2023'''
 import pygame
 import asyncio
 from game import Game, GameState, PlayerState, BuildState

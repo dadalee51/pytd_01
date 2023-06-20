@@ -1,4 +1,4 @@
-'''class for monsters and towers to react - copyright 2022 Tigo.Robotics'''
+'''class for monsters and towers to react by Tigo.robotics 2022,2023'''
 #runners are in charge of handle state changes, game dynamics, algorithms in realtime.
 from models import Monster, Tower
 from game import Game, GameState

@@ -1,4 +1,4 @@
-'''Model module ©️ Tigo.robotics 2022'''
+'''Model module by Tigo.robotics 2022,2023'''
 #includes ai and player models, call algorithms 
 #does not know about pygame, pure async model
 import asyncio
