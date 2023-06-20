@@ -16,19 +16,19 @@ starting point of the game: main.py
 the entry point of the code. everything started from this file.
 
 basic outline of this game code: 
-*main.py
+#main.py
   to start the game, run the main.py
   to stop the game, press 'q' or stop the current python execution thread.
-*vislayers.py
+#vislayers.py
   visual display of the game
-*models.py
+#models.py
   manage values related to each classes, grid, monsters etc.
-*runners.py
+#runners.py
   create instances of classes from models.py, towers, monsters, etc.
-*pathfinder.py
+#pathfinder.py
   take a grid, start, goal and roadblocks, calculate best path using astar algorithms.
   return the path to caller.
-*game.py
+#game.py
   includes variables related to the game, task may need to update/change values to communicate
   with other tasks using these variables. 
 
