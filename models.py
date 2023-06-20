@@ -20,8 +20,10 @@ class PackageList:
                     continue
                 #detect collision with monsters
                 for target in Game.monsters:
-                    if Game.x_left_padding+target.posx-pk.size*pk.effect_range <= pk.px <= Game.x_left_padding+target.posx+pk.size*pk.effect_range and \
-                        Game.y_top_padding+target.posy-pk.size*pk.effect_range <= pk.py <= Game.y_top_padding+target.posy+pk.size*pk.effect_range:
+                    if Game.x_left_padding+target.posx-pk.size*pk.effect_range <= pk.px \
+                          <= Game.x_left_padding+target.posx+pk.size*pk.effect_range and \
+                        Game.y_top_padding+target.posy-pk.size*pk.effect_range <= pk.py \
+                            <= Game.y_top_padding+target.posy+pk.size*pk.effect_range:
                         pk.color=(255,255,255,50)
                         target.health-=pk.power
                         target.state=MonsterState.HIT
