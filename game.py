@@ -62,7 +62,7 @@ class Game:
     build_state=BuildState.WALL
     font =None
     buttons=dict()
-    instructions='Drag start and goal to move, right-click to choose mode, drag on empty blocks to create walls. Q-quit game'
+    instructions='''drag to move: start and goal, right-click :choose tower, drag: empty blocks to create walls. q-quit game'''
     score=0 #game score
     life = 100 #need a limit of the game, when tower life reaches zero, game over.
 

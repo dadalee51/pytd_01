@@ -121,7 +121,6 @@ class Foreground(Layer):
         text = Game.font.render(Game.instructions, True, (255,255,50))
         game_score = Game.font.render('Score:  '+str(Game.score), True, (255,255,255))
         game_life = Game.font.render('Health:  '+str(Game.life), True, (255,255,255))
-
         Game.screen.blit(text,(0,0,30,30))
         Game.screen.blit(game_score,(0,60,30,30))
         Game.screen.blit(game_life,(0,90,30,30))
@@ -130,13 +129,11 @@ class Foreground(Layer):
         text = Game.font.render('Game Over', True, (255,255,50))
         text2 = Game.font.render('q-QUIT or ENTER-restart', True, (255,255,50))
         game_score = Game.font.render('Score:  '+str(Game.score), True, (255,255,255))
-        game_life = Game.font.render('Health:  '+str(Game.life), True, (255,255,255))
         cx=Game.disp_width//2
         cy=Game.disp_height//2
         Game.screen.blit(text,(cx,cy,30,30))
         Game.screen.blit(text2,(cx,cy+20,30,30))        
         Game.screen.blit(game_score,(cx,cy+60,30,30))
-        Game.screen.blit(game_life,(cx,cy+90,30,30))
 
     '''Path from the green starting point to red goal.'''
     def draw_path(self):
