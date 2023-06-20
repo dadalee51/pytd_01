@@ -141,4 +141,4 @@ class Input:
                             self.on_move()
                             Game.mouse_last_action=3
                             #does not change the last action here if no one start drag.
-                await asyncio.sleep(0.01)
+                await asyncio.sleep(0)

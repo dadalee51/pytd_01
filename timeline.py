@@ -15,7 +15,7 @@ class Timeline:
     async def flow(self):
         while True:
             if self.debug:print(Game.current_mode, Game.build_state, Game.player_state)
-            if Game.life==0:
+            if Game.life<=0:
                 Game.state=GameState.STATE_OVER
                 Game.life=100 #when game state changed to state over, reset game.life
             '''Here we can add chapters of our game'''
