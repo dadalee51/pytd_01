@@ -20,7 +20,11 @@ class Layer:
     #buttons could be dynamic
     def create_button(self, name, disptext,color,x_off, y_off):
         text = Game.font.render(disptext, True, (0,0,0))
-        the_b = pygame.draw.rect(self.sf,color,(x_off,y_off,Settings.BUTTON_WIDTH,Settings.BUTTON_HEIGHT))
+        the_b = pygame.draw.rect(self.sf,color,
+                                 (x_off,
+                                  y_off,
+                                  Settings.BUTTON_WIDTH,
+                                  Settings.BUTTON_HEIGHT))
         Game.buttons[name]=the_b
         self.sf.blit(text,(x_off+30,y_off+5,60,40))
 
@@ -77,10 +81,14 @@ class Foreground(Layer):
     def draw_monsters(self):
         for m in Game.monsters:
             if m.health>0:
-                pygame.draw.circle(self.sf,m.color,(Game.x_left_padding+m.posx,Game.y_top_padding+m.posy),m.size)
+                pygame.draw.circle(self.sf,m.color,
+                                   (Game.x_left_padding+m.posx,
+                                    Game.y_top_padding+m.posy),m.size)
                 #draw health of monster
                 text = Game.font.render(str(m.health), True, (0,0,0))
-                Game.screen.blit(text,(Game.x_left_padding+m.posx,Game.y_top_padding+m.posy-3*m.size,30,30))
+                Game.screen.blit(text,(
+                    Game.x_left_padding+m.posx,
+                    Game.y_top_padding+m.posy-3*m.size,30,30))
  
     def draw_towers(self):
         px,py=Game.x_left_padding,Game.y_top_padding
@@ -89,12 +97,17 @@ class Foreground(Layer):
             pygame.draw.rect(self.sf,t.color, (t.cenx-off, t.ceny-off,t.size,t.size))
             #then process each tower's state:
             if t.state==Tower.State.AIM:
-                pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),(int(math.sin(t.aim_direction)*20+(t.cenx)),int(math.cos(t.aim_direction)*20+(t.ceny))))
+                pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),
+                                 (int(math.sin(t.aim_direction)*20+(t.cenx)),
+                                  int(math.cos(t.aim_direction)*20+(t.ceny))))
             elif t.state==Tower.State.FIRE:
                 if t.type==0:
-                    pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),(int(math.sin(t.aim_direction)*20+(t.cenx)),int(math.cos(t.aim_direction)*20+(t.ceny))))
+                    pygame.draw.line(self.sf,(255,0,0),(t.cenx,t.ceny),
+                                     (int(math.sin(t.aim_direction)*20+(t.cenx)),
+                                      int(math.cos(t.aim_direction)*20+(t.ceny))))
                 elif t.type==1:
-                    pygame.draw.line(self.sf,(0,255,0),(t.cenx,t.ceny),(t.target.posx+px,t.target.posy+py))
+                    pygame.draw.line(self.sf,(0,255,0),(t.cenx,t.ceny),
+                                     (t.target.posx+px,t.target.posy+py))
             elif t.state==Tower.State.RELOAD:
                 pass
     def draw_packages(self):
@@ -125,7 +138,7 @@ class Foreground(Layer):
         Game.screen.blit(game_score,(cx,cy+60,30,30))
         Game.screen.blit(game_life,(cx,cy+90,30,30))
 
-
+    '''Path from the green starting point to red goal.'''
     def draw_path(self):
         for p in Grid.current_path:
             ncolr=(0,255,255,100)

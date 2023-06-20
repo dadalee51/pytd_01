@@ -33,7 +33,7 @@ class PackageList:
                     pk.py+= math.cos(pk.dir) * pk.fly_speed
                 else:
                     pk.gone=True    
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0)
 
 
 class Package:
@@ -120,7 +120,7 @@ class Tower:
                     self.state=Tower.State.AIM
                     await asyncio.sleep(self.aim_delay)
                     continue
-            await asyncio.sleep(0.001)
+            await asyncio.sleep(0)
         self.state=Tower.State.IDLE
     #FIRE
     async def attack_monster(self): #AIM to FIRE
@@ -129,11 +129,17 @@ class Tower:
             if self.state==Tower.State.AIM:
                 self.state=Tower.State.FIRE
                 if self.type==0:
-                    PackageList.pk_list.append(Package(self.cenx,self.ceny,self.aim_direction,self.fly_lim,self.fly_speed))
+                    PackageList.pk_list.append(
+                        Package(
+                            self.cenx,
+                            self.ceny,
+                            self.aim_direction,
+                            self.fly_lim,
+                            self.fly_speed))
                 elif self.type==1:
                     self.target.health-=self.power
                 await asyncio.sleep(self.fire_delay)                
-            await asyncio.sleep(0.001)
+            await asyncio.sleep(0)
     #RELOAD
     async def reload(self):
         while True:
@@ -141,7 +147,7 @@ class Tower:
             if self.state==Tower.State.FIRE:
                 await asyncio.sleep(self.reload_delay)
                 self.state=Tower.State.RELOAD
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0)
 
 #a tower defence game may no have main player on screen.
 class Grid:
@@ -177,8 +183,12 @@ class Grid:
     @staticmethod
     def conv_pos_to_xy(grid_size):
         pos = pygame.mouse.get_pos()
-        if pos[0]>Game.screen_width+Game.x_left_padding or pos[1]>Game.screen_height+Game.y_top_padding: return -1,-1
-        if pos[0]<Game.x_left_padding or pos[1]<Game.y_top_padding: return -1,-1
+        if pos[0]>Game.screen_width+Game.x_left_padding or \
+            pos[1]>Game.screen_height+Game.y_top_padding: 
+            return -1,-1
+        if pos[0]<Game.x_left_padding or \
+            pos[1]<Game.y_top_padding: 
+            return -1,-1
         x=(pos[0]-Game.x_left_padding)//(grid_size)
         y=(pos[1]-Game.y_top_padding)//(grid_size)
         return y,x
@@ -194,7 +204,8 @@ class Grid:
         ey,ex=Grid.conv_pos_to_xy(grid_size)
         if astar.data[ey][ex] == None: 
             pass
-        elif (astar.goal==astar.data[ey][ex].name) or (astar.start==astar.data[ey][ex].name) :
+        elif (astar.goal==astar.data[ey][ex].name) or \
+            (astar.start==astar.data[ey][ex].name) :
             return astar
         if (ey,ex)==(-1,-1):
             return astar

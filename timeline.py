@@ -17,7 +17,8 @@ class Timeline:
             if self.debug:print(Game.current_mode, Game.build_state, Game.player_state)
             if Game.life==0:
                 Game.state=GameState.STATE_OVER
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0)
+            
 
 
 

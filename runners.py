@@ -17,10 +17,10 @@ class TowerRunner:
             for i,cell in enumerate(row):
                 if cell >= 10 and cell <=1000:
                     if cell==10:
-                        twr=Tower('tower'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,0,100),10,100)
+                        twr=Tower('tower1'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,0,100),10,100)
                         twr.type=0
                     elif cell==11:
-                        twr=Tower('tower2'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,0,100),10,100)
+                        twr=Tower('tower2'+str(i)+str(j),Game.x_left_padding+Grid.grid_size*i,Game.y_top_padding+Grid.grid_size*j,(100,50,50),10,100)
                         twr.power=20
                         twr.type=1
                     Game.towers.append(twr)
@@ -42,7 +42,7 @@ class TowerRunner:
                 self.tower_created=0  
             elif Game.state==GameState.STATE_PLAY:
                 self.create_towers()
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0)
 
 
         
@@ -56,7 +56,7 @@ class MonsterRunner:
         m2 =Monster('bMon', 100,Grid.start_x*Grid.grid_size,Grid.start_y*Grid.grid_size, (50,0,50), 5, 1, 1)
         m2.speed=5
         m2.color=(255,0,0)
-        m2.size=20
+        m2.size=10
         Game.monsters.append(m)
         Game.monsters.append(m2)
     #produce and track monsters
@@ -113,6 +113,6 @@ class MonsterRunner:
                 Game.state=GameState.STATE_IDLE
             elif Game.state==GameState.STATE_CONFIG:
                 pass
-            await asyncio.sleep(0.05)
+            await asyncio.sleep(0)
 
 
